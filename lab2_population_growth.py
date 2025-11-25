@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import os
 from pathlib import Path
 from textwrap import dedent
 
@@ -115,6 +116,11 @@ def save_plot(fig_name: str) -> Path:
     return path
 
 
+def img_md_path(path: Path) -> str:
+    """Возвращает путь к картинке относительно каталога отчёта."""
+    return Path(os.path.relpath(path, REPORT_DIR)).as_posix()
+
+
 sns.set_theme(style="whitegrid")
 plt.rcParams.update(
     {
@@ -146,7 +152,7 @@ report_parts.append(
     "Линейный график показывает смену знака прироста: после пика 2019 года "
     "страна уходит в устойчивое сокращение населения."
 )
-report_parts.append(f"![ex1]({ex1_img})")
+report_parts.append(f"![ex1]({img_md_path(ex1_img)})")
 
 # Exercise 2: динамика по федеральным округам
 ex2_sql = dedent(
@@ -171,7 +177,7 @@ report_parts.append(
     "Большинство округов показывают отрицательные значения, за исключением "
     "Северо-Кавказского округа"
 )
-report_parts.append(f"![ex2]({ex2_img})")
+report_parts.append(f"![ex2]({img_md_path(ex2_img)})")
 
 # Exercise 3: тепловая карта округ × год
 heatmap_df = ex2_pdf.pivot(index="District", columns="Year", values="TotalGrowth")
@@ -185,7 +191,7 @@ report_parts.append(
     "Тепловая карта усиливает различия: Северный Кавказ и отдельные годы в ЦФО "
     "остаются зонами роста, тогда как Приволжский и Сибирский округа стабильно в минусе."
 )
-report_parts.append(f"![ex3]({ex3_img})")
+report_parts.append(f"![ex3]({img_md_path(ex3_img)})")
 
 # Exercise 4: топ/анти-топ субъектов 2023
 ex4_sql = dedent(
@@ -226,7 +232,7 @@ report_parts.append(
     "Горизонтальная диаграмма подчёркивает сверхпозитивную динамику в Москве и "
     "Московской области на фоне глубокого спада в большинстве регионов Центральной России."
 )
-report_parts.append(f"![ex4]({ex4_img})")
+report_parts.append(f"![ex4]({img_md_path(ex4_img)})")
 
 # Exercise 5: доля положительных лет по округам
 ex5_sql = dedent(
@@ -256,7 +262,7 @@ report_parts.append(
     "Северо-Кавказский округ остаётся единственным регионом, где все годы выборки "
     "показывают положительный прирост, тогда как большинство округов имеют долю 0."
 )
-report_parts.append(f"![ex5]({ex5_img})")
+report_parts.append(f"![ex5]({img_md_path(ex5_img)})")
 
 report_path = REPORT_DIR / "lab2_report.md"
 report_path.write_text("\n\n".join(report_parts), encoding="utf-8")
